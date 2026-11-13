@@ -1,0 +1,353 @@
+
+:root {
+    color-scheme: light;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    color: #172a35;
+    background: #f5f7f8;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+
+    --ink: #172a35;
+    --muted: #64737b;
+    --line: #e2e8eb;
+    --accent: #bd5b2b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    background:
+        radial-gradient(
+            ellipse at 85% 0%,
+            rgba(207, 225, 228, 0.35),
+            transparent 34rem
+        ),
+        #f5f7f8;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+/* Page layout */
+
+.page-shell {
+    width: min(1120px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 54px 0 42px;
+}
+
+.page-header {
+    max-width: 900px;
+    margin: 0 auto 30px;
+}
+
+.page-header h1 {
+    max-width: 880px;
+    margin-bottom: 12px;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.15;
+}
+
+.page-header p {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Visualization cards */
+
+.visualization-card {
+    position: relative;
+    padding: 28px 30px 22px;
+    border: 1px solid rgba(220, 228, 231, 0.9);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 14px 40px rgba(27, 55, 66, 0.055);
+}
+
+.black-hat-card {
+    margin-top: 30px;
+}
+
+.eyebrow {
+    margin: 0 0 10px;
+    color: #276476;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.black-hat-card .eyebrow {
+    color: #8d3036;
+}
+
+.chart-toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 4px 14px;
+}
+
+.chart-toolbar > div {
+    min-width: 0;
+}
+
+.chart-toolbar h2,
+.black-hat-heading h2 {
+    max-width: 860px;
+    margin: 0 0 8px;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
+}
+
+.black-hat-heading {
+    padding: 0 4px 14px;
+}
+
+.chart-intro {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.6;
+}
+
+/* White-hat metric selector */
+
+.metric-control {
+    display: grid;
+    gap: 6px;
+    flex: 0 0 auto;
+    color: #52636c;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.metric-control select {
+    min-height: 40px;
+    padding: 0 34px 0 12px;
+    border: 1px solid #d5dfe3;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.metric-control select:focus-visible {
+    outline: 3px solid rgba(39, 100, 118, 0.22);
+    outline-offset: 2px;
+}
+
+/* Shared chart layout */
+
+.chart-region {
+    width: 100%;
+    min-height: 300px;
+}
+
+.black-hat-region {
+    min-height: 330px;
+}
+
+.chart-region svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.loading-message,
+.error-message {
+    padding: 50px 20px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.error-message {
+    color: #8a301f;
+}
+
+/* Chart labels and axes */
+
+.axis-label {
+    fill: #6b7a82;
+    font-size: 11px;
+}
+
+.axis-title {
+    fill: #43545d;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.row-label {
+    fill: #263a44;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.legend-title {
+    fill: #52636c;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.legend-tick {
+    stroke: #84949b;
+    stroke-width: 1px;
+}
+
+.legend-tick-label {
+    fill: #718088;
+    font-size: 10px;
+}
+
+/* White-hat heatmap */
+
+.cell {
+    stroke: #fff;
+    stroke-width: 2px;
+    cursor: default;
+    transition: filter 120ms ease, stroke 120ms ease;
+}
+
+.cell:hover,
+.cell:focus-visible {
+    stroke: #152b36;
+    stroke-width: 2.5px;
+    filter: brightness(1.05);
+    outline: none;
+}
+
+.cell-value {
+    pointer-events: none;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.no-data-label {
+    fill: #64737b;
+    font-size: 9px;
+    pointer-events: none;
+}
+
+.small-sample-marker {
+    fill: #bd5b2b;
+    stroke: #fff;
+    stroke-width: 1.5px;
+    pointer-events: none;
+}
+
+.sample-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 5px 0;
+    color: #5e6f77;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.sample-note strong {
+    color: #344a55;
+    white-space: nowrap;
+}
+
+.sample-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* Black-hat stacked bar chart */
+
+.bh-gridline {
+    stroke: #e8edef;
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+}
+
+.bh-segment {
+    cursor: default;
+    transition: filter 120ms ease;
+}
+
+.bh-segment:hover {
+    filter: brightness(1.12);
+}
+
+.bh-no-finding {
+    fill: #9e2f35;
+}
+
+.bh-substantiated {
+    fill: #718796;
+}
+
+.bh-percent-label {
+    fill: #fff;
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.black-hat-data-note {
+    margin: 0 5px;
+    color: #74838a;
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+/* Tooltips */
+
+.tooltip {
+    position: fixed;
+    z-index: 5;
+    display: none;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 24px));
+    padding: 12px 14px;
+    border: 1px solid #263e49;
+    border-radius: 9px;
+    background: #172a35;
+    box-shadow: 0 8px 24px rgba(11, 28, 36, 0.22);
+    color: #f6f9fa;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    pointer-events: none;
+}
+
+.tooltip.is-visible {
+    display: block;
+}
+
+.tooltip-title {
+    margin-bottom: 5px;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.tooltip-metric {
+    margin-top: 5px;
+    color: #d7e8eb;
+    font-weight: 600;
+}

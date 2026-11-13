@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7f8" />
+    <title>NYPD Civilian Allegations | White Hat vs. Black Hat</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <main class="page-shell">
+      <header class="page-header">
+        <h1>NYPD Civilian Allegations: Two Perspectives</h1>
+        <p>CMSC471 — White Hat vs. Black Hat Visualizations</p>
+      </header>
+
+      <!-- WHITE HAT VISUALIZATION -->
+      <section class="visualization-card" aria-labelledby="chart-heading">
+        <div class="chart-toolbar">
+          <div>
+            <h2 id="chart-heading">
+              How Have NYPD Allegation Substantiation Rates Changed Over Time?
+            </h2>
+            <p class="chart-intro">
+              Each cell represents allegations received in one year and
+              category.
+            </p>
+          </div>
+
+          <label class="metric-control" for="metric-select">
+            <span>Color by</span>
+            <select id="metric-select" aria-label="Choose the heatmap metric">
+              <option value="rate" selected>Substantiation Rate (%)</option>
+              <option value="count">Total Allegations (Count)</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="vis" class="chart-region" aria-live="polite">
+          <p class="loading-message">Loading the CCRB allegation data…</p>
+        </div>
+
+        <div
+          id="tooltip"
+          class="tooltip"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <p class="sample-note">
+          <span class="sample-dot" aria-hidden="true"></span>
+          <strong>Small sample:</strong>
+          a marker identifies cells with fewer than 50 allegations. Rates from
+          smaller groups can vary more from year to year.
+        </p>
+      </section>
+
+      <!-- BLACK HAT VISUALIZATION -->
+      <section
+        class="visualization-card black-hat-card"
+        aria-labelledby="black-hat-heading"
+      >
+        <div class="black-hat-heading">
+          <h2 id="black-hat-heading">
+            The NYPD Accountability Gap: Most Allegations End Without a
+            Misconduct Finding
+          </h2>
+
+          <p class="chart-intro">
+            Investigation outcomes for NYPD civilian allegations, 2010–2019
+          </p>
+        </div>
+
+        <div
+          id="black-hat-vis"
+          class="chart-region black-hat-region"
+          aria-live="polite"
+        >
+          <p class="loading-message">Loading the CCRB allegation data…</p>
+        </div>
+
+        <div
+          id="black-hat-tooltip"
+          class="tooltip"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <p
+          id="black-hat-data-note"
+          class="black-hat-data-note"
+          aria-live="polite"
+        ></p>
+      </section>
+    </main>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
