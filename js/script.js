@@ -1,4 +1,4 @@
-const DATA_PATH = "data/allegations_202007271729.csv";
+const DATA_PATH = "./data/allegations_202007271729.csv";
 const YEARS = Array.from({ length: 10 }, (_, index) => 2010 + index);
 const CATEGORIES = [
   "Force",
