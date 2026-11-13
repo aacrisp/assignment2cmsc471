@@ -7,6 +7,13 @@ const CATEGORIES = [
   "Offensive Language",
 ];
 const SMALL_SAMPLE_THRESHOLD = 50;
+const BLACK_HAT_TITLE =
+  "The NYPD Accountability Gap: Most Allegations End Without a Misconduct Finding";
+const BLACK_HAT_SUBTITLE =
+  "Investigation outcomes for NYPD civilian allegations, 2010–2019";
+const REVEALED_TITLE =
+  "The NYPD Accountability Gap: Most Allegations End Without a Misconduct Finding - Honest Version";
+const REVEALED_SUBTITLE = BLACK_HAT_SUBTITLE;
 
 const chartContainer = d3.select("#vis");
 const tooltip = d3.select("#tooltip");
@@ -16,6 +23,8 @@ const blackHatTooltip = d3.select("#black-hat-tooltip");
 const blackHatDataNote = d3.select("#black-hat-data-note");
 let heatmapData = [];
 let blackHatData = [];
+let allRows = [];
+let revealed = false;
 
 if (typeof d3 === "undefined") {
   showLoadError(
@@ -24,9 +33,11 @@ if (typeof d3 === "undefined") {
 } else {
   d3.csv(DATA_PATH)
     .then((rows) => {
+      allRows = rows;
       heatmapData = processRows(rows);
       blackHatData = processBlackHatData(rows);
       metricSelect.on("change", drawChart);
+      d3.select("#reveal-btn").on("click", toggleReveal);
       drawChart();
       drawBlackHatChart();
 
@@ -484,9 +495,9 @@ function processBlackHatData(rows) {
     const group = {
       category,
       total: 0,
-      eligibleTotal: 0,
-      noFinding: 0,
       substantiated: 0,
+      unsubstantiated: 0,
+      exonerated: 0,
       unrecognized: 0,
     };
     for (const row of rows) {
@@ -504,24 +515,68 @@ function processBlackHatData(rows) {
       const disposition = (row.board_disposition || "").trim();
       if (disposition.startsWith("Substantiated")) {
         group.substantiated += 1;
-      } else if (
-        disposition === "Unsubstantiated" ||
-        disposition === "Exonerated"
-      ) {
-        group.noFinding += 1;
+      } else if (disposition === "Unsubstantiated") {
+        group.unsubstantiated += 1;
+      } else if (disposition === "Exonerated") {
+        group.exonerated += 1;
       } else {
         group.unrecognized += 1;
       }
     }
+    group.noFinding = group.unsubstantiated + group.exonerated;
     group.eligibleTotal = group.noFinding + group.substantiated;
-    group.noFindingPct = group.eligibleTotal
-      ? (group.noFinding / group.eligibleTotal) * 100
-      : 0;
-    group.substantiatedPct = group.eligibleTotal
-      ? (group.substantiated / group.eligibleTotal) * 100
-      : 0;
+    const pct = (count) =>
+      group.eligibleTotal ? (count / group.eligibleTotal) * 100 : 0;
+    group.noFindingPct = pct(group.noFinding);
+    group.substantiatedPct = pct(group.substantiated);
+    group.unsubstantiatedPct = pct(group.unsubstantiated);
+    group.exoneratedPct = pct(group.exonerated);
     return group;
   }).sort((a, b) => b.noFindingPct - a.noFindingPct);
+}
+
+function getSegments(d) {
+  if (!revealed) {
+    return [
+      {
+        label: "No Misconduct Finding",
+        count: d.noFinding,
+        pct: d.noFindingPct,
+        color: "#9e2f35",
+        textColor: "#fff",
+      },
+      {
+        label: "Substantiated",
+        count: d.substantiated,
+        pct: d.substantiatedPct,
+        color: "#718796",
+        textColor: "#fff",
+      },
+    ];
+  }
+  return [
+    {
+      label: "Substantiated",
+      count: d.substantiated,
+      pct: d.substantiatedPct,
+      color: "#276476",
+      textColor: "#fff",
+    },
+    {
+      label: "Exonerated",
+      count: d.exonerated,
+      pct: d.exoneratedPct,
+      color: "#e3a008",
+      textColor: "#2b1d00",
+    },
+    {
+      label: "Unsubstantiated",
+      count: d.unsubstantiated,
+      pct: d.unsubstantiatedPct,
+      color: "#718796",
+      textColor: "#fff",
+    },
+  ];
 }
 
 function drawBlackHatChart() {
@@ -537,7 +592,8 @@ function drawBlackHatChart() {
   const rowHeight = narrow ? 62 : 66;
   const plotWidth = Math.max(100, width - left - right);
   const plotBottom = top + rowHeight * blackHatData.length;
-  const height = plotBottom + (narrow ? 112 : 94);
+  const legendItems = getSegments(blackHatData[0]);
+  const height = plotBottom + (narrow ? 70 + legendItems.length * 21 : 94);
   const x = d3
     .scaleLinear()
     .domain([0, 100])
@@ -553,14 +609,12 @@ function drawBlackHatChart() {
   svg
     .append("title")
     .attr("id", "black-hat-title")
-    .text(
-      "The NYPD Accountability Gap: Most Allegations End Without a Misconduct Finding",
-    );
+    .text(revealed ? REVEALED_TITLE : BLACK_HAT_TITLE);
   svg
     .append("desc")
     .attr("id", "black-hat-desc")
     .text(
-      "A 100 percent stacked horizontal bar chart showing no misconduct finding and substantiated outcomes by allegation category, sorted by no misconduct finding percentage.",
+      "A 100 percent stacked horizontal bar chart showing investigation outcomes by allegation category.",
     );
 
   [0, 25, 50, 75, 100].forEach((tick) => {
@@ -597,86 +651,41 @@ function drawBlackHatChart() {
 
   groups.each(function (d) {
     const row = d3.select(this);
-    const noW = (plotWidth * d.noFindingPct) / 100;
-    const subW = plotWidth - noW;
-    row
-      .append("rect")
-      .attr("class", "bh-segment bh-no-finding")
-      .attr("x", left)
-      .attr("y", 9)
-      .attr("width", noW)
-      .attr("height", 34)
-      .attr("rx", 4)
-      .on("mouseenter mousemove", (event) =>
-        showBlackHatTooltip(
-          event,
-          d,
-          "No Misconduct Finding",
-          d.noFinding,
-          d.noFindingPct,
-        ),
-      )
-      .on("mouseleave", hideBlackHatTooltip)
-      .on("focus", (event) =>
-        showBlackHatTooltip(
-          event,
-          d,
-          "No Misconduct Finding",
-          d.noFinding,
-          d.noFindingPct,
-        ),
-      );
-    row
-      .append("rect")
-      .attr("class", "bh-segment bh-substantiated")
-      .attr("x", left + noW)
-      .attr("y", 9)
-      .attr("width", subW)
-      .attr("height", 34)
-      .attr("rx", 4)
-      .on("mouseenter mousemove", (event) =>
-        showBlackHatTooltip(
-          event,
-          d,
-          "Substantiated",
-          d.substantiated,
-          d.substantiatedPct,
-        ),
-      )
-      .on("mouseleave", hideBlackHatTooltip)
-      .on("focus", (event) =>
-        showBlackHatTooltip(
-          event,
-          d,
-          "Substantiated",
-          d.substantiated,
-          d.substantiatedPct,
-        ),
-      );
-    row
-      .append("text")
-      .attr("class", "bh-percent-label")
-      .attr("x", left + Math.max(8, noW / 2))
-      .attr("y", 31)
-      .attr("text-anchor", noW > 72 ? "middle" : "start")
-      .text(`${fmt(d.noFindingPct)}%`);
-    row
-      .append("text")
-      .attr("class", "bh-percent-label")
-      .attr("x", left + noW + subW / 2)
-      .attr("y", 31)
-      .attr("text-anchor", "middle")
-      .text(`${fmt(d.substantiatedPct)}%`);
+    let offset = left;
+    getSegments(d)
+      .filter((segment) => segment.pct > 0)
+      .forEach((segment) => {
+        const segmentWidth = (plotWidth * segment.pct) / 100;
+        row
+          .append("rect")
+          .attr("class", "bh-segment")
+          .attr("x", offset)
+          .attr("y", 9)
+          .attr("width", segmentWidth)
+          .attr("height", 34)
+          .attr("rx", revealed ? 0 : 4)
+          .attr("fill", segment.color)
+          .on("mouseenter mousemove", (event) =>
+            showBlackHatTooltip(event, d, segment),
+          )
+          .on("mouseleave", hideBlackHatTooltip)
+          .on("focus", (event) => showBlackHatTooltip(event, d, segment));
+        row
+          .append("text")
+          .attr("class", "bh-percent-label")
+          .attr("x", offset + segmentWidth / 2)
+          .attr("y", 31)
+          .attr("text-anchor", "middle")
+          .style("fill", segment.textColor)
+          .text(`${fmt(segment.pct)}%`);
+        offset += segmentWidth;
+      });
   });
 
   const legendY = plotBottom + 53;
-  const legendItems = [
-    { label: "No Misconduct Finding", color: "#9e2f35" },
-    { label: "Substantiated", color: "#718796" },
-  ];
   const legendStartX = narrow
     ? Math.max(8, (width - 205) / 2)
-    : Math.max(left, (width - 330) / 2);
+    : Math.max(left, (width - (184 * legendItems.length - 38)) / 2);
   legendItems.forEach((item, index) => {
     const itemX = narrow ? legendStartX : legendStartX + index * 184;
     const itemY = legendY + (narrow ? index * 21 : 0);
@@ -704,13 +713,16 @@ function drawBlackHatChart() {
   );
 }
 
-function showBlackHatTooltip(event, category, outcome, count, percentage) {
+function showBlackHatTooltip(event, category, segment) {
+  const details = revealed
+    ? `<div>Outcome: ${segment.label}</div>` +
+      `<div>Share: ${d3.format(".1f")(segment.pct)}%</div>`
+    : "";
   blackHatTooltip
     .html(
       `<div class="tooltip-title">${category.category}</div>` +
-        `<div>Outcome: ${outcome}</div>` +
-        `<div>Share: ${d3.format(".1f")(percentage)}%</div>` +
-        `<div>Allegations in group: ${formatCount(count)}</div>` +
+        details +
+        `<div>Allegations in group: ${formatCount(segment.count)}</div>` +
         `<div>Total allegations: ${formatCount(category.total)}</div>`,
     )
     .classed("is-visible", true);
@@ -728,4 +740,77 @@ function showBlackHatTooltip(event, category, outcome, count, percentage) {
 
 function hideBlackHatTooltip() {
   blackHatTooltip.classed("is-visible", false);
+}
+
+function toggleReveal() {
+  revealed = !revealed;
+  d3.select("#reveal-btn")
+    .attr("aria-pressed", revealed)
+    .text(revealed ? "Hide the reveal" : "Reveal the tricks");
+  d3.select("#black-hat-heading").text(
+    revealed ? REVEALED_TITLE : BLACK_HAT_TITLE,
+  );
+  d3.select("#black-hat-subtitle").text(
+    revealed ? REVEALED_SUBTITLE : BLACK_HAT_SUBTITLE,
+  );
+  drawBlackHatChart();
+  drawRevealNotes();
+}
+
+function yearSubstantiationRate(year) {
+  const inYear = allRows.filter(
+    (row) =>
+      row.year_received === String(year) && CATEGORIES.includes(row.fado_type),
+  );
+  const substantiated = inYear.filter((row) =>
+    row.board_disposition.startsWith("Substantiated"),
+  );
+  return (substantiated.length / inYear.length) * 100;
+}
+
+function drawRevealNotes() {
+  const notes = d3.select("#reveal-notes");
+  notes.attr("hidden", revealed ? null : "");
+  notes.selectAll("*").remove();
+  if (!revealed) return;
+
+  const sum = (key) => d3.sum(blackHatData, (d) => d[key]);
+  const eligible = sum("eligibleTotal");
+  const pct = d3.format(".1f");
+  const unsubstantiated = (sum("unsubstantiated") / eligible) * 100;
+  const exonerated = (sum("exonerated") / eligible) * 100;
+  const bySize = [...blackHatData].sort((a, b) => b.total - a.total);
+  const largest = bySize[0];
+  const smallest = bySize[bySize.length - 1];
+
+  const items = [
+    [
+      "Two outcomes were merged.",
+      `Unsubstantiated (${pct(unsubstantiated)}%) and Exonerated (${pct(exonerated)}%) were combined into one red "No Misconduct Finding" bar (${pct(unsubstantiated + exonerated)}%). Exonerated means the alleged conduct happened but did not violate NYPD rules. Unsubstantiated means there was not enough evidence.`,
+    ],
+    [
+      "Color steered the eye.",
+      "The merged bar was red and Substantiated was a muted gray-blue, so the red read as the story first.",
+    ],
+    [
+      "100% bars hid the volume.",
+      `${largest.category} (${formatCount(largest.total)} allegations) looked the same size as ${smallest.category} (${formatCount(smallest.total)}).`,
+    ],
+    [
+      "Time was collapsed.",
+      `Pooling the years hid that the overall substantiation rate rose from ${pct(yearSubstantiationRate(YEARS[0]))}% in ${YEARS[0]} to ${pct(yearSubstantiationRate(YEARS[YEARS.length - 1]))}% in ${YEARS[YEARS.length - 1]}.`,
+    ],
+    [
+      "Words did the rest.",
+      "The headline framed the no-finding share as the failure, and the hover text left out the outcome names.",
+    ],
+  ];
+
+  notes.append("h3").attr("class", "reveal-heading").text("What was distorted");
+  const list = notes.append("ul").attr("class", "reveal-list");
+  items.forEach(([lead, detail]) => {
+    const li = list.append("li");
+    li.append("strong").text(`${lead} `);
+    li.append("span").text(detail);
+  });
 }

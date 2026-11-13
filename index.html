@@ -1,147 +1,250 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f7f8" />
-    <title>NYPD Civilian Allegations | White Hat vs. Black Hat</title>
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
 
-  <body>
-    <main class="page-shell">
-      <header class="page-header">
-        <h1>NYPD Civilian Allegations: Two Perspectives</h1>
-        <p>CMSC471 — White Hat vs. Black Hat Visualizations</p>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f7f8" />
+  <title>NYPD Civilian Allegations | White Hat vs. Black Hat</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
 
-      <!-- WHITE HAT VISUALIZATION -->
-      <section class="visualization-card" aria-labelledby="chart-heading">
-        <div class="chart-toolbar">
-          <div>
-            <h2 id="chart-heading">
-              How Have NYPD Allegation Substantiation Rates Changed Over Time?
-            </h2>
-            <p class="chart-intro">
-              Each cell represents allegations received in one year and
-              category.
-            </p>
-          </div>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <h1>NYPD Civilian Allegations: Two Perspectives</h1>
+      <p>CMSC471 — White Hat vs. Black Hat Visualizations</p>
+    </header>
 
-          <label class="metric-control" for="metric-select">
-            <span>Color by</span>
-            <select id="metric-select" aria-label="Choose the heatmap metric">
-              <option value="rate" selected>Substantiation Rate (%)</option>
-              <option value="count">Total Allegations (Count)</option>
-            </select>
-          </label>
+    <!-- WHITE HAT VISUALIZATION -->
+    <section class="visualization-card" aria-labelledby="chart-heading">
+      <div class="chart-toolbar">
+        <div>
+          <h2 id="chart-heading">
+            How Have NYPD Allegation Substantiation Rates Changed Over Time?
+          </h2>
+          <p class="chart-intro">
+            Each cell represents allegations received in one year and
+            category.
+          </p>
         </div>
 
-        <div id="vis" class="chart-region" aria-live="polite">
-          <p class="loading-message">Loading the CCRB allegation data…</p>
-        </div>
+        <label class="metric-control" for="metric-select">
+          <span>Color by</span>
+          <select id="metric-select" aria-label="Choose the heatmap metric">
+            <option value="rate" selected>Substantiation Rate (%)</option>
+            <option value="count">Total Allegations (Count)</option>
+          </select>
+        </label>
+      </div>
 
-        <div
-          id="tooltip"
-          class="tooltip"
-          role="status"
-          aria-live="polite"
-        ></div>
+      <div id="vis" class="chart-region" aria-live="polite">
+        <p class="loading-message">Loading the CCRB allegation data…</p>
+      </div>
 
-        <p class="sample-note">
-          <span class="sample-dot" aria-hidden="true"></span>
-          <strong>Small sample:</strong>
-          a marker identifies cells with fewer than 50 allegations. Rates from
-          smaller groups can vary more from year to year.
-        </p>
-      </section>
+      <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
 
-      <!-- BLACK HAT VISUALIZATION -->
-      <section
-        class="visualization-card black-hat-card"
-        aria-labelledby="black-hat-heading"
-      >
+      <p class="sample-note">
+        <span class="sample-dot" aria-hidden="true"></span>
+        <strong>Small sample:</strong>
+        a marker identifies cells with fewer than 50 allegations. Rates from
+        smaller groups can vary more from year to year.
+      </p>
+    </section>
+
+    <!-- BLACK HAT VISUALIZATION -->
+    <section class="visualization-card black-hat-card" aria-labelledby="black-hat-heading">
+      <div class="chart-toolbar">
         <div class="black-hat-heading">
           <h2 id="black-hat-heading">
             The NYPD Accountability Gap: Most Allegations End Without a
             Misconduct Finding
           </h2>
 
-          <p class="chart-intro">
+          <p id="black-hat-subtitle" class="chart-intro">
             Investigation outcomes for NYPD civilian allegations, 2010–2019
           </p>
         </div>
 
-        <div
-          id="black-hat-vis"
-          class="chart-region black-hat-region"
-          aria-live="polite"
-        >
-          <p class="loading-message">Loading the CCRB allegation data…</p>
-        </div>
-
-        <div
-          id="black-hat-tooltip"
-          class="tooltip"
-          role="status"
-          aria-live="polite"
-        ></div>
-
-        <p
-          id="black-hat-data-note"
-          class="black-hat-data-note"
-          aria-live="polite"
-        ></p>
-      </section>
-      <div id="writeup">
-        <h2>White Hat</h2>
-        <p>
-          For our white hat visualization, we decided to use the NYPD civilian allegations data set. Specifically, 
-          we segmented the data based on allegation category and year, and then calculated the outcome which we
-          labeled as substantiation rate. We also included a marker in the form of a red dot in order to indicate a low
-          sample size. Furthermore, we included a drop down menu in order to switch between substantiation rate and
-          total count of allegations, in order to allow for more clear analysis of the data. We decided to use a color
-          scale based on the number of allegations or percent substantiated, and chose blue as it is typically a color
-          associated with the police. For percent substantiated specifically, we noticed that it was never greater than
-          50%, so we chose that as the darkest blue, in order to make the other percentage differences more noticeable
-          in terms of color, as it would be harder to tell if the scale went to 100%. We also decided to include a
-          tooltip when a box is hovered over, in order to more clearly explain the data for that specific allegation
-          in that specific year. We made these design choices in order to break down the data as much as possible, and
-          allow viewers to understand the trends over time. We wanted to show how substantiation rates are rising,
-          as well as how the total count of allegations has changed over time, which is why we included a drop down to
-          switch between the two. It allows viewers to understand and extrapolate that although substantiation rates are
-          generally rising, it may be because there are less claims in total, meaning fewer false allegations. In addition,
-          by including the red dots on both the substantiation and total count parts, we allow viewers to understand
-          which pieces of data may be more reliable, and which ones to take with a grain of salt due to a lower sample size.
-        </p>
-        <h2>Black Hat</h2>
-        <p>
-          For our black hat visualization, we once again used the NYPD civilian allegations data set, but this time,
-          we chose to display it in a different manner. We did not segment the data by year, and instead only seperated
-          by allegation, hiding how the number changes over time. In addition, we combined the "exonerated" and 
-          "unsubstantiated" categories into one new label - "no misconduct finding" - in order to distort the 
-          visualization and mislead the viewer into thinking that the allegations are overwhelmingly dismissed. This
-          is in fact not the case, and many are substantiated, but the officer is exonerated from the charges and does
-          not face punishment. Furthermore, we chose to use red in order to alarm the viewer, and make them think that
-          most misconduct complaints are dismissed, and combined that with a misleading and suggestive title to indicate
-          that the NYPD is a corrupt organization. We also intentionally made the tooltip that is displayed on hover
-          misleading and not specific - it displays "allegations in group" and "total allegations" without stating their
-          actual outcome. In addition, we included percentages on both sides of the bar to highlight how much greater
-          the no misconduct finding side was, and demonstrate that a very small percent of allegations are substantiated.
-          Circling back to how we split the data, we chose to not split by year in order to hide the trends that can be
-          seen in the white hat visualization. By only showing the total percentages, we can disguise the fact that many
-          allegation categories are becoming more substantiated as time goes on, and that the police are becoming more
-          liable for their actions. Instead, by including all the data together, there is no perception of any change
-          over time in behavior or punishment.
-        </p>
-        <h2>Development & AI Usage</h2>
-        <p>
-          blah
-        </p>
+        <button id="reveal-btn" class="reveal-btn" type="button" aria-pressed="false" aria-controls="reveal-notes">
+          Reveal the tricks
+        </button>
       </div>
-    </main>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="js/script.js"></script>
-  </body>
+      <div id="black-hat-vis" class="chart-region black-hat-region" aria-live="polite">
+        <p class="loading-message">Loading the CCRB allegation data…</p>
+      </div>
+
+      <div id="black-hat-tooltip" class="tooltip" role="status" aria-live="polite"></div>
+
+      <p id="black-hat-data-note" class="black-hat-data-note" aria-live="polite"></p>
+
+      <div id="reveal-notes" class="reveal-notes" aria-live="polite" hidden></div>
+    </section>
+    <br />
+    <div id="writeup">
+      <h2>White Hat</h2>
+      <p>
+        For our white hat visualization, we decided to use the NYPD civilian
+        allegations data set. Specifically, we segmented the data based on
+        allegation category and year, and then calculated the outcome which we
+        labeled as substantiation rate. We also included a marker in the form
+        of an orange dot in order to indicate a low sample size. Furthermore,
+        we included a drop down menu in order to switch between substantiation
+        rate and total count of allegations, in order to allow for more clear
+        analysis of the data. We decided to use a color scale based on the
+        number of allegations or percent substantiated, and chose blue as it
+        is typically a color associated with the police. For percent
+        substantiated specifically, we noticed that it was never greater than
+        50%, so we chose that as the darkest blue, in order to make the other
+        percentage differences more noticeable in terms of color, as it would
+        be harder to tell if the scale went to 100%. We also decided to
+        include a tooltip when a box is hovered over, in order to more clearly
+        explain the data for that specific allegation in that specific year.
+        We made these design choices in order to break down the data as much
+        as possible, and allow viewers to understand the trends over time. We
+        wanted to show how substantiation rates have generally risen, although
+        not in every category, as well as how the total count of allegations
+        has changed over time, which is why we included a drop down to switch
+        between the two. In addition, by including the orange dots on both the
+        substantiation and total count parts, we allow viewers to understand
+        which pieces of data may be more reliable, and which ones to take with
+        a grain of salt due to a lower sample size. Finally, the data set only
+        includes officers who had at least one substantiated allegation, so
+        the rates shown are higher than they would be for all complaints, and
+        the 2019 counts are probably incomplete.
+      </p>
+      <h2>Black Hat</h2>
+      <p>
+        For our black hat visualization, we once again used the NYPD civilian
+        allegations data set, but this time, we chose to display it in a
+        different manner. We did not segment the data by year, and instead
+        only separated by allegation, hiding how the number changes over time.
+        In addition, we combined the "exonerated" and "unsubstantiated"
+        categories into one new label - "no misconduct finding" - in order to
+        distort the visualization and mislead the viewer into thinking that
+        the allegations are overwhelmingly dismissed. This is misleading
+        because the two outcomes mean different things: exonerated means the
+        alleged conduct happened but did not violate NYPD rules, while
+        unsubstantiated means there was not enough evidence, and about 27% of
+        allegations were in fact substantiated. Furthermore, we chose to use
+        red in order to alarm the viewer, and make them think that most
+        misconduct complaints are dismissed, and combined that with a
+        misleading and suggestive title to indicate that the NYPD is a corrupt
+        organization. We also intentionally made the tooltip that is displayed
+        on hover misleading and not specific - it displays "allegations in
+        group" and "total allegations" without stating their actual outcome.
+        In addition, we included percentages on both sides of the bar to
+        highlight how much greater the no misconduct finding side was, and
+        demonstrate that a very small percent of allegations are
+        substantiated. Circling back to how we split the data, we chose to not
+        split by year in order to hide the trends that can be seen in the
+        white hat visualization. By only showing the total percentages, we can
+        disguise the fact that the overall substantiation rate rose from 17.5%
+        in 2010 to 30.9% in 2019. Instead, by including all the data together,
+        there is no perception of any change over time. We also gave no hint
+        of how the data was filtered: the data set only includes officers who
+        had at least one substantiated allegation, so the percentages describe
+        that group of officers rather than all NYPD complaints, and nothing on
+        the chart tells the viewer that.
+      </p>
+
+      <h2>Extra Credit Features</h2>
+      <ul>
+        <li>
+          <p>
+            <strong>Reveal the tricks.</strong> A button on the black hat
+            chart redraws it as the "honest version" of the same data. The red
+            "No Misconduct Finding" bar splits back into Exonerated and
+            Unsubstantiated, each outcome gets its own color, and the
+            headline, legend, and hover text change to match. A short list
+            then explains each distortion, using numbers calculated from the
+            data. This is particularly insightful as it lets
+            the viewer see the same data change meaning when the framing
+            changes.
+          </p>
+        </li>
+      </ul>
+
+      <h2>Development</h2>
+      <p>
+        Given each member’s availability and skill sets, Jackson handled the
+        majority of the programming for this assignment. Arun did the two
+        write-ups on the White and Black Hat visualizations and deployed the
+        site. MJ completed the Development and AI Usage write-ups, shot the
+        demo video, did some code refactoring, and added the Extra Credit
+        features. The development process was quite smooth, starting with
+        deciding on the dataset. From there, Jackson ran some ideas back and
+        forth to figure out the design of the two visualizations before
+        settling on one design and checking with the other team members. The
+        rest of the process involved manual adjustments, adding scaling,
+        selecting better colors, dropdowns, and the tooltip. Additionally,
+        other features were added for the black hat visualization such as the
+        percentages added to the horizontally stacked bar chart. After this
+        process, more code refactoring was done to clean up and simplify some
+        functions. All team members had backgrounds in HTML and CSS, so some
+        design modifications were made after the initial draft of the site to
+        make it look more visually appealing.
+      </p>
+      <p>
+        In total we spent roughly 8 people-hours: about 1 hour on
+        brainstorming, about 3 hours on the main coding, and about 4 hours on
+        write-ups, the demo video, hosting setup, and other code
+        modifications. The aspects that took the most time were fine-tuning
+        the visualizations and researching how to make the black hat
+        visualization misleading without being obvious. Late in the process, we
+        also spent time reviewing the code and fact-checking our write-ups
+        against the data, which led to several corrections and the extra
+        credit features.
+      </p>
+
+      <h2>AI Usage</h2>
+      <p>
+        We used Claude (Anthropic) in three ways. First, we used it to try
+        several ideas for visualizations that suited the data we chose. Most
+        of the manual touch-ups, including the scaling and the other features
+        mentioned above, were done by the team. Secondly, we used it as a
+        reviewer: it read our code and checked our write-ups against the CSV.
+        That review caught some mislabeled outcomes, and an incorrect
+        description for the tooltip behavior. Thirdly, Claude drafted code for
+        the Reveal the Tricks feature and helped outline the demo video
+        script. The team tested and reviewed these changes before using them.
+      </p>
+
+      <h2>References</h2>
+      <p>
+        As mentioned above, we used the Civilian complaints against New York
+        City police officers dataset. Aside from this, our white hat
+        visualization drew some inspiration from heatmap style visualizations,
+        particularly the one found in a paper entitled "Enhancing Construction
+        Dispute Mediation and Risk Management Using Unmanned Aerial Systems."
+        These two sources are cited below.
+      </p>
+      <ul>
+        <li>
+          <p>
+            New York City Civilian Complaint Review Board. (2020). Civilian
+            complaints against New York City police officers [Data set].
+            ProPublica Data Store.
+            https://projects.propublica.org/datastore/#civilian-complaints-against-new-york-city-police-officers
+          </p>
+        </li>
+        <li>
+          <p>
+            Al-Omari, Mohammad & Ataei, Hossein & Hashem M. Mehany, Mohammed &
+            Alqaisi, Aaraf & Seyrfar, Abolfazl & Osman, Ibrahim. (2026).
+            Enhancing Construction Dispute Mediation and Risk Management Using
+            Unmanned Aerial Systems. Journal of Legal Affairs and Dispute
+            Resolution in Engineering and Construction. 18.
+            10.1061/JLADAH.LADR-1236.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </main>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
 </html>
