@@ -93,6 +93,52 @@
           aria-live="polite"
         ></p>
       </section>
+      <div id="writeup">
+        <h2>White Hat</h2>
+        <p>
+          For our white hat visualization, we decided to use the NYPD civilian allegations data set. Specifically, 
+          we segmented the data based on allegation category and year, and then calculated the outcome which we
+          labeled as substantiation rate. We also included a marker in the form of a red dot in order to indicate a low
+          sample size. Furthermore, we included a drop down menu in order to switch between substantiation rate and
+          total count of allegations, in order to allow for more clear analysis of the data. We decided to use a color
+          scale based on the number of allegations or percent substantiated, and chose blue as it is typically a color
+          associated with the police. For percent substantiated specifically, we noticed that it was never greater than
+          50%, so we chose that as the darkest blue, in order to make the other percentage differences more noticeable
+          in terms of color, as it would be harder to tell if the scale went to 100%. We also decided to include a
+          tooltip when a box is hovered over, in order to more clearly explain the data for that specific allegation
+          in that specific year. We made these design choices in order to break down the data as much as possible, and
+          allow viewers to understand the trends over time. We wanted to show how substantiation rates are rising,
+          as well as how the total count of allegations has changed over time, which is why we included a drop down to
+          switch between the two. It allows viewers to understand and extrapolate that although substantiation rates are
+          generally rising, it may be because there are less claims in total, meaning fewer false allegations. In addition,
+          by including the red dots on both the substantiation and total count parts, we allow viewers to understand
+          which pieces of data may be more reliable, and which ones to take with a grain of salt due to a lower sample size.
+        </p>
+        <h2>Black Hat</h2>
+        <p>
+          For our black hat visualization, we once again used the NYPD civilian allegations data set, but this time,
+          we chose to display it in a different manner. We did not segment the data by year, and instead only seperated
+          by allegation, hiding how the number changes over time. In addition, we combined the "exonerated" and 
+          "unsubstantiated" categories into one new label - "no misconduct finding" - in order to distort the 
+          visualization and mislead the viewer into thinking that the allegations are overwhelmingly dismissed. This
+          is in fact not the case, and many are substantiated, but the officer is exonerated from the charges and does
+          not face punishment. Furthermore, we chose to use red in order to alarm the viewer, and make them think that
+          most misconduct complaints are dismissed, and combined that with a misleading and suggestive title to indicate
+          that the NYPD is a corrupt organization. We also intentionally made the tooltip that is displayed on hover
+          misleading and not specific - it displays "allegations in group" and "total allegations" without stating their
+          actual outcome. In addition, we included percentages on both sides of the bar to highlight how much greater
+          the no misconduct finding side was, and demonstrate that a very small percent of allegations are substantiated.
+          Circling back to how we split the data, we chose to not split by year in order to hide the trends that can be
+          seen in the white hat visualization. By only showing the total percentages, we can disguise the fact that many
+          allegation categories are becoming more substantiated as time goes on, and that the police are becoming more
+          liable for their actions. Instead, by including all the data together, there is no perception of any change
+          over time in behavior or punishment.
+        </p>
+        <h2>Development & AI Usage</h2>
+        <p>
+          blah
+        </p>
+      </div>
     </main>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
